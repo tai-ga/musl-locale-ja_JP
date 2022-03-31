@@ -17,9 +17,11 @@ jobs:
       - name: Build
         run: |
           make build
-      - name: Gzip
+      - name: Create zip file
         run: |
-          gzip ja_JP.UTF-8
+          mkdir ja_JP-UTF-8_amd64
+          cp ja_JP.UTF-8 ja_JP-UTF-8_amd64
+          zip -r ja_JP-UTF-8_amd64.zip ja_JP-UTF-8_amd64
       - name: Create release
         id: create_release
         uses: actions/create-release@v1.0.0
@@ -37,9 +39,9 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./ja_JP.UTF-8.gz
-          asset_name: ja_JP.UTF-8.gz
-          asset_content_type: application/gzip
+          asset_path: ./ja_JP-UTF-8_amd64.zip
+          asset_name: ja_JP-UTF-8_amd64.zip
+          asset_content_type: application/zip
   slack-notify:
     if: always()
     needs: [releaser]
